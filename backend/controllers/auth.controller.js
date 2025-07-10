@@ -28,11 +28,13 @@ export const signupController = async (req, res, next) => {
         const token = jwt.sign({ userId: newUsers[0]._id }, process.env.JWT_SECERT, { expiresIn: process.env.JWT_EXPIRY });
         console.log("NODE_ENV:", process.env.NODE_ENV);
 
+        const isProduction = process.env.NODE_ENV === 'production';
+
         res.cookie('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production', // true in prod, false locally
+            secure: isProduction,
+            sameSite: isProduction ? 'None' : 'Lax',
             maxAge: 86400000,
-            sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
             path: '/',
         });
 
@@ -79,11 +81,13 @@ export const loginController = async (req, res, next) => {
 
         // store token in cookie
 
+        const isProduction = process.env.NODE_ENV === 'production';
+
         res.cookie('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production', // true in prod, false locally
+            secure: isProduction,
+            sameSite: isProduction ? 'None' : 'Lax',
             maxAge: 86400000,
-            sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
             path: '/',
         });
 
