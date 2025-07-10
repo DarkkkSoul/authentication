@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import { User } from "../models/user.model";
+import { User } from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import dotenv from ' dotenv'
+import dotenv from 'dotenv'
 dotenv.config();
 export const signupController = async (req, res, next) => {
 
@@ -25,7 +25,7 @@ export const signupController = async (req, res, next) => {
 
         const newUsers = await User.create([{ username, email, password: hashedPassword }], { session: mongooseSession });
 
-        const token = jwt.sign({ userId: newUsers[0]._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRY });
+        const token = jwt.sign({ userId: newUsers[0]._id }, process.env.JWT_SECERT, { expiresIn: process.env.JWT_EXPIRY });
 
         res.cookie('token', token, {
             httpOnly: true,
@@ -74,7 +74,7 @@ export const loginController = async (req, res, next) => {
             throw error;
         }
 
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECERT_KEY, { expiresIn: process.env.JWT_EXPIRY });
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECERT, { expiresIn: process.env.JWT_EXPIRY });
 
         // store token in cookie
 
