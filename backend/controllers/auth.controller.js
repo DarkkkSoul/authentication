@@ -28,8 +28,10 @@ export const signupController = async (req, res, next) => {
         const token = jwt.sign({ userId: newUsers[0]._id }, process.env.JWT_SECERT, { expiresIn: process.env.JWT_EXPIRY });
         console.log("NODE_ENV:", process.env.NODE_ENV);
 
-        const isProduction = process.env.NODE_ENV === 'production';
 
+
+        // cookie
+        const isProduction = process.env.NODE_ENV === 'production';
         res.cookie('token', token, {
             httpOnly: true,
             secure: isProduction,
