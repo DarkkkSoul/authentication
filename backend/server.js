@@ -4,6 +4,7 @@ import authRouter from './routes/auth.routes.js';
 const app = express();
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import errorHandler from './middleware/errorHandler.middleware.js';
 
 const port = process.env.PORT || 3000;
 
@@ -18,6 +19,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use('/auth', authRouter);
+
+app.use(errorHandler);
 
 app.get('/', (req, res) => {
     res.send('Welcome to authentication system');

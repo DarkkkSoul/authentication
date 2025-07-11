@@ -31,7 +31,10 @@ function Login() {
                 credentials: 'include',
             });
 
+            console.log(response)
+
             const data = await response.json();
+            console.log(data);
 
             if (response.ok) {
                 setMessage(data.message);
