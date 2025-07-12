@@ -7,6 +7,7 @@ function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -19,6 +20,7 @@ function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
         try {
             const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/login`, {
@@ -30,16 +32,16 @@ function Login() {
                 // credentials: 'include',
             });
 
-
             const data = await response.json();
             const token = data.token;
 
             if (response.ok) {
+                setLoading(false);
                 setMessage(data.message);
                 localStorage.setItem('token', token);
                 setTimeout(() => {
                     navigate('/home');
-                }, 1500);
+                }, 900);
             } else {
                 setMessage(data.errorMessage);
             }
@@ -99,6 +101,8 @@ function Login() {
                         Sign Me In!
                     </button>
                 </form>
+
+                {loading && <p className='text-white mt-4 text-center'>Loading...</p>}
 
                 {message && <p className='text-white mt-4 text-center'>{message}</p>}
 
