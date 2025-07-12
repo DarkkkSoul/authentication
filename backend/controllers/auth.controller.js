@@ -28,17 +28,15 @@ export const signupController = async (req, res, next) => {
         const token = jwt.sign({ userId: newUsers[0]._id }, process.env.JWT_SECERT, { expiresIn: process.env.JWT_EXPIRY });
         console.log("NODE_ENV:", process.env.NODE_ENV);
 
-
-
-        // cookie
-        const isProduction = process.env.NODE_ENV === 'production';
-        res.cookie('token', token, {
-            httpOnly: true,
-            secure: isProduction,
-            sameSite: isProduction ? 'None' : 'Lax',
-            maxAge: 86400000,
-            path: '/',
-        });
+        // store token in cookie
+        // const isProduction = process.env.NODE_ENV === 'production';
+        // res.cookie('token', token, {
+        //     httpOnly: true,
+        //     secure: isProduction,
+        //     sameSite: isProduction ? 'None' : 'Lax',
+        //     maxAge: 86400000,
+        //     path: '/',
+        // });
 
         await mongooseSession.commitTransaction();
         mongooseSession.endSession();
@@ -46,8 +44,8 @@ export const signupController = async (req, res, next) => {
         return res.status(200).json({
             sucess: true,
             message: "User created successfully",
+            token,
             data: {
-                token,
                 user: newUsers[0],
             }
         });
@@ -82,27 +80,35 @@ export const loginController = async (req, res, next) => {
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECERT, { expiresIn: process.env.JWT_EXPIRY });
 
         // store token in cookie
-
-        const isProduction = process.env.NODE_ENV === 'production';
-
-        res.cookie('token', token, {
-            httpOnly: true,
-            secure: isProduction,
-            sameSite: isProduction ? 'None' : 'Lax',
-            maxAge: 86400000,
-            path: '/',
-        });
+        // const isProduction = process.env.NODE_ENV === 'production';
+        // res.cookie('token', token, {
+        //     httpOnly: true,
+        //     secure: isProduction,
+        //     sameSite: isProduction ? 'None' : 'Lax',
+        //     maxAge: 86400000,
+        //     path: '/',
+        // });
 
         return res.status(200).json({
             success: true,
             message: "User logged in successfully",
+            // send token to f/e, so that it can be stored in local storage
+            token,
             data: {
-                token,
                 user: user
             }
-        });
+        })
 
     } catch (error) {
         next(error);
     }
 };
+
+export const logoutController = async (req, res, next) => {
+    try {
+        res.clearCookie('token');
+        return res.status(200).json({ sucess: true, message: "User logged out successfully" });
+    } catch (error) {
+        next(error);
+    }
+}

@@ -1,7 +1,7 @@
 export const userController = async (req, res, next) => {
     try {
-        req.user = user;
-        res.json({ user }).status(200);
+        const user = req.user;
+        res.json({ username: user.username, message: 'You are authorized' }).status(200);
     } catch (error) {
         next(error);
     }

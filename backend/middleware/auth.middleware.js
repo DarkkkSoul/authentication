@@ -27,9 +27,7 @@ const authorizeMiddleware = async (req, res, next) => {
             throw error;
         }
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-        //
+        const decoded = jwt.verify(token, process.env.JWT_SECERT);
 
         const user = await User.findById(decoded.userId);
 

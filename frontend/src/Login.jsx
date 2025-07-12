@@ -21,24 +21,25 @@ function Login() {
         e.preventDefault();
 
         try {
-
             const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/login`, {
                 method: "POST",
                 body: JSON.stringify({ email, password }),
                 headers: {
                     "Content-Type": "application/json",
                 },
-                credentials: 'include',
+                // credentials: 'include',
             });
 
-            console.log(response)
 
             const data = await response.json();
-            console.log(data);
+            const token = data.token;
 
             if (response.ok) {
                 setMessage(data.message);
-                navigate('/home');
+                localStorage.setItem('token', token);
+                setTimeout(() => {
+                    navigate('/home');
+                }, 1500);
             } else {
                 setMessage(data.errorMessage);
             }
