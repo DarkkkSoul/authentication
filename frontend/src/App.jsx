@@ -9,10 +9,18 @@ function App() {
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
 
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
+    useEffect(() => {
+        if (message) {
+            setTimeout(() => {
+                setMessage('');
+            }, 900)
+        }
+    })
     const handleSubmit = async (e) => {
-
+        setLoading(true);
         e.preventDefault();
 
         try {
@@ -23,17 +31,21 @@ function App() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ username, email, password }),
-                credentials: 'include',
+                // credentials: 'include',
             });
 
             const data = await response.json();
-            console.log(data);
-            console.log(response);
+            const token = data.token;
 
             if (response.ok) {
+                setLoading(false);
+                setMessage(data.message);
+                // localStorage.setItem('token', token);
+                sessionStorage.setItem('token', token);
                 setMessage(data.message || "Signup successful!");
-                navigate("/home");
-
+                setTimeout(() => {
+                    navigate("/home");
+                }, 900);
             } else {
                 setMessage(data.errorMessage || "Signup failed. Please try again.");
             }
@@ -127,10 +139,9 @@ function App() {
                     </button>
                 </form>
 
-                {/* success message */}
-                {message && (
-                    <p className="text-center text-green-600 mt-4">{message}</p>
-                )}
+                {loading && <p className='text-white mt-4 text-center'>Loading...</p>}
+
+                {message && <p className='text-white mt-4 text-center'>{message}</p>}
 
                 {/* already have account */}
                 <div className="mt-6 text-center">

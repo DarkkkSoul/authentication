@@ -24,7 +24,11 @@ function Home() {
             // }
 
             // FOR LOCAL STORAGE
-            localStorage.removeItem('token');
+            // localStorage.removeItem('token');
+
+            // FOR SESSION STORAGE
+            sessionStorage.removeItem('token');
+
             navigate('/login');
         } catch (error) {
             console.log('ERROR:', error);
@@ -32,7 +36,9 @@ function Home() {
     }
     const handleAuthorize = async () => {
         try {
-            const token = localStorage.getItem('token')
+            // const token = localStorage.getItem('token')
+            const token = sessionStorage.getItem('token')
+
             const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/`, {
                 method: 'GET',
                 headers: {

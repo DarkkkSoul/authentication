@@ -14,7 +14,7 @@ function Login() {
         if (message) {
             setTimeout(() => {
                 setMessage('');
-            }, 2000)
+            }, 900)
         }
     })
 
@@ -29,7 +29,7 @@ function Login() {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                // credentials: 'include',
+                // credentials: 'include', only for cookie
             });
 
             const data = await response.json();
@@ -38,7 +38,10 @@ function Login() {
             if (response.ok) {
                 setLoading(false);
                 setMessage(data.message);
-                localStorage.setItem('token', token);
+
+                // localStorage.setItem('token', token); //local storage
+                sessionStorage.setItem('token', token); //session storage
+
                 setTimeout(() => {
                     navigate('/home');
                 }, 900);
